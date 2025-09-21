@@ -1,5 +1,7 @@
 #include <iostream>
 
+const char *TASKER_VERSION = "0.1.0";
+
 struct Task {
     int id;
     std::string desc;
@@ -15,7 +17,7 @@ void print_help() {
     println("  add [description]      Add a new task");
     println("  list                   List all tasks");
     println("  done [task_id]         Mark a task as done");
-    println("  delete [task_id]       Delete a task");
+    println("  remove [task_id]       Delete a task");
     println("  help                   Show this help message");
     println("  version                Show version information");
 }
@@ -44,7 +46,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    Command command = stringToEnum(argv[0]);
+    Command command = stringToEnum(argv[1]);
 
     switch (command) {
     case Command::ADD:
@@ -63,10 +65,10 @@ int main(int argc, char *argv[]) {
         println("Help");
         break;
     case Command::VERSION:
-        println("Version");
+        println(TASKER_VERSION);
         break;
     case Command::UNKNOWN:
-        println("Unknown");
+        println("Unknown command. Use `tasker --help` for help.");
         break;
     }
 
