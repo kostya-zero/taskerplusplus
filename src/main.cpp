@@ -1,4 +1,5 @@
 #include <iostream>
+#include <nlohmann/json.hpp>
 
 const char *TASKER_VERSION = "0.1.0";
 
@@ -40,6 +41,22 @@ Command stringToEnum(const std::string &command) {
     return Command::UNKNOWN;
 }
 
+void add_command() {
+    println("Add");
+}
+
+void list_command() {
+    println("List");
+}
+
+void done_command() {
+    println("Done");
+}
+
+void delete_command() {
+    println("Delete");
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 2) {
         print_help();
@@ -50,19 +67,19 @@ int main(int argc, char *argv[]) {
 
     switch (command) {
     case Command::ADD:
-        println("Add");
+        add_command();
         break;
     case Command::LIST:
-        println("List");
+        list_command();
         break;
     case Command::DONE:
-        println("Done");
+        done_command();
         break;
     case Command::DELETE:
-        println("Delete");
+        delete_command();
         break;
     case Command::HELP:
-        println("Help");
+        print_help();
         break;
     case Command::VERSION:
         println(TASKER_VERSION);
