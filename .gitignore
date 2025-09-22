@@ -1,2 +1,2 @@
-/.xmake
-/build
+/.idea
+/cmake-build-debug
