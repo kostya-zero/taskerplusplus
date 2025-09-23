@@ -1,13 +1,9 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-const char *TASKER_VERSION = "0.1.0";
+#include "store.h"
 
-struct Task {
-    int id;
-    std::string desc;
-    bool done;
-};
+const char *TASKER_VERSION = "0.1.0";
 
 void println(const char *str) { std::cout << str << std::endl; }
 
@@ -41,12 +37,58 @@ Command stringToEnum(const std::string &command) {
     return Command::UNKNOWN;
 }
 
-void add_command() {
-    println("Add");
+void add_command(const std::string &desc) {
+    const std::string store_path = get_store_path();
+    try {
+        std::vector<Task> tasks = load_tasks(store_path);
+        int next_id = 1;
+        for (const auto &task : tasks) {
+            if (task.id > next_id) {
+                next_id = task.id;
+            }
+        }
+        Task task;
+        task.id = next_id;
+        task.desc = desc;
+        task.done = false;
+
+        tasks.push_back(task);
+
+        try {
+            save_tasks(store_path, tasks);
+            println("Added.");
+        } catch (const std::runtime_error &e2) {
+            std::cout << "Failed to save tasks: " << e2.what() << std::endl;
+            exit(1);
+        }
+    } catch (const std::runtime_error &e1) {
+        std::cout << "Failed to read tasks: " << e1.what() << std::endl;
+        exit(1);
+    }
 }
 
 void list_command() {
-    println("List");
+    const std::string store_path = get_store_path();
+    try {
+        std::vector<Task> tasks = load_tasks(store_path);
+        if (tasks.empty()) {
+            println("No tasks at the moment.");
+            return;
+        }
+
+        // Sort tasks by id
+        std::sort(tasks.begin(), tasks.end(), [](const Task &a, const Task &b) {
+            return a.id < b.id;
+        });
+
+        for (const auto &task: tasks) {
+            std::cout << "[" << (task.done ? "x" : " ") << "] "
+                    << task.id << ": " << task.desc << std::endl;
+        }
+    } catch (const std::runtime_error &e) {
+        std::cout << "Failed to read tasks: " << e.what() << std::endl;
+        exit(1);
+    }
 }
 
 void done_command() {
@@ -57,36 +99,48 @@ void delete_command() {
     println("Delete");
 }
 
-int main(int argc, char *argv[]) {
+int main(const int argc, char *argv[]) {
     if (argc < 2) {
         print_help();
         return 1;
     }
 
-    Command command = stringToEnum(argv[1]);
+    const Command command = stringToEnum(argv[1]);
 
     switch (command) {
-    case Command::ADD:
-        add_command();
-        break;
-    case Command::LIST:
-        list_command();
-        break;
-    case Command::DONE:
-        done_command();
-        break;
-    case Command::DELETE:
-        delete_command();
-        break;
-    case Command::HELP:
-        print_help();
-        break;
-    case Command::VERSION:
-        println(TASKER_VERSION);
-        break;
-    case Command::UNKNOWN:
-        println("Unknown command. Use `tasker --help` for help.");
-        break;
+        case Command::ADD:
+            if (argc < 3) {
+                println("Description is required.");
+                return 1;
+            }
+            if (argc > 3) {
+                println("Too many arguments");
+                return 1;
+            }
+
+            {
+                const auto desc = std::string(argv[2]);
+                add_command(desc);
+            }
+            break;
+        case Command::LIST:
+            list_command();
+            break;
+        case Command::DONE:
+            done_command();
+            break;
+        case Command::DELETE:
+            delete_command();
+            break;
+        case Command::HELP:
+            print_help();
+            break;
+        case Command::VERSION:
+            println(TASKER_VERSION);
+            break;
+        case Command::UNKNOWN:
+            println("Unknown command. Use `tasker --help` for help.");
+            break;
     }
 
     return 0;
