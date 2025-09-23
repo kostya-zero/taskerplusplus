@@ -11,4 +11,6 @@ By the way, it's made for learning the C++ language, not for the actual use.
 - [x] `list` command
 - [ ] `remove` command
 - [ ] `done` command
+- [ ] Setup GitHub Action builds
 - [ ] Better CLI visuals
+- [ ] Use a better error handling solution

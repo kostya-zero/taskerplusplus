@@ -91,12 +91,12 @@ void list_command() {
     }
 }
 
-void done_command() {
-    println("Done");
-}
-
 void remove_command() {
     println("Remove");
+}
+
+void done_command() {
+    println("Done");
 }
 
 int main(const int argc, char *argv[]) {
