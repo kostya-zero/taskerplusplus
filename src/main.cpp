@@ -41,14 +41,14 @@ void add_command(const std::string &desc) {
     const std::string store_path = get_store_path();
     try {
         std::vector<Task> tasks = load_tasks(store_path);
-        int next_id = 1;
+        int next_id = 0;
         for (const auto &task : tasks) {
             if (task.id > next_id) {
                 next_id = task.id;
             }
         }
         Task task;
-        task.id = next_id;
+        task.id = next_id + 1;
         task.desc = desc;
         task.done = false;
 
