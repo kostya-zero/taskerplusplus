@@ -10,7 +10,7 @@ By the way, it's made for learning the C++ language, not for the actual use.
 - [x] `add` command
 - [x] `list` command
 - [ ] `remove` command
-- [ ] `done` command
+- [x] `check` command
 - [ ] Setup GitHub Action builds
 - [ ] Better CLI visuals
 - [ ] Use a better error handling solution

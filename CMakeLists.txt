@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 project(taskerplusplus)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 find_package(nlohmann_json CONFIG REQUIRED)
 include_directories(src)
 
