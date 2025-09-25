@@ -95,8 +95,39 @@ void list_command() {
     }
 }
 
-void remove_command() {
-    println("Remove");
+void remove_command(const int &id) {
+    const std::string store_path = get_store_path();
+    try {
+        std::vector<Task> tasks = load_tasks(store_path);
+        if (tasks.empty()) {
+            println("No tasks at the moment.");
+            return;
+        }
+
+        std::optional<size_t> task_index;
+        for (size_t i = 0; i < tasks.size(); ++i) {
+            if (tasks[i].id == id) {
+                task_index = i;
+            }
+        }
+        if (!task_index.has_value()) {
+            eprintln("Task not found");
+            exit(1);
+        }
+
+        tasks.erase(tasks.begin() + task_index.value());
+
+        try {
+            save_tasks(store_path, tasks);
+            println("Removed.");
+        } catch (const std::runtime_error &e2) {
+            std::cout << "Failed to save tasks: " << e2.what() << std::endl;
+            exit(1);
+        }
+    } catch (const std::runtime_error &e1) {
+        std::cout << "Failed to read tasks: " << e1.what() << std::endl;
+        exit(1);
+    }
 }
 
 void check_command(const int &id) {
@@ -187,7 +218,28 @@ int main(const int argc, char *argv[]) {
             }
             break;
         case Command::REMOVE:
-            remove_command();
+            if (argc < 3) {
+                println("ID is required.");
+                return 1;
+            }
+            if (argc > 3) {
+                println("Too many arguments");
+                return 1;
+            }
+
+        {
+            try {
+                const auto id_string = std::string(argv[2]);
+                const auto id = std::stoi(id_string);
+                remove_command(id);
+            } catch (const std::invalid_argument &e) {
+                std::cerr << "ID is not a number" << std::endl;
+                return 1;
+            } catch (const std::out_of_range &e) {
+                std::cerr << "ID is out of range." << std::endl;
+                return 1;
+            }
+        }
             break;
         case Command::HELP:
             print_help();
