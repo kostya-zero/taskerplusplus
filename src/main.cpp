@@ -227,19 +227,19 @@ int main(const int argc, char *argv[]) {
                 return 1;
             }
 
-        {
-            try {
-                const auto id_string = std::string(argv[2]);
-                const auto id = std::stoi(id_string);
-                remove_command(id);
-            } catch (const std::invalid_argument &e) {
-                std::cerr << "ID is not a number" << std::endl;
-                return 1;
-            } catch (const std::out_of_range &e) {
-                std::cerr << "ID is out of range." << std::endl;
-                return 1;
+            {
+                try {
+                    const auto id_string = std::string(argv[2]);
+                    const auto id = std::stoi(id_string);
+                    remove_command(id);
+                } catch (const std::invalid_argument &e) {
+                    std::cerr << "ID is not a number" << std::endl;
+                    return 1;
+                } catch (const std::out_of_range &e) {
+                    std::cerr << "ID is out of range." << std::endl;
+                    return 1;
+                }
             }
-        }
             break;
         case Command::HELP:
             print_help();
