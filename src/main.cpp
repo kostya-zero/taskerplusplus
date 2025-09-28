@@ -61,11 +61,11 @@ void add_command(const std::string &desc) {
             save_tasks(store_path, tasks);
             println("Added.");
         } catch (const std::runtime_error &e2) {
-            std::cout << "Failed to save tasks: " << e2.what() << std::endl;
+            std::cerr << "Failed to save tasks: " << e2.what() << std::endl;
             exit(1);
         }
     } catch (const std::runtime_error &e1) {
-        std::cout << "Failed to read tasks: " << e1.what() << std::endl;
+        std::cerr << "Failed to read tasks: " << e1.what() << std::endl;
         exit(1);
     }
 }
@@ -121,11 +121,11 @@ void remove_command(const int &id) {
             save_tasks(store_path, tasks);
             println("Removed.");
         } catch (const std::runtime_error &e2) {
-            std::cout << "Failed to save tasks: " << e2.what() << std::endl;
+            std::cerr << "Failed to save tasks: " << e2.what() << std::endl;
             exit(1);
         }
     } catch (const std::runtime_error &e1) {
-        std::cout << "Failed to read tasks: " << e1.what() << std::endl;
+        std::cerr << "Failed to read tasks: " << e1.what() << std::endl;
         exit(1);
     }
 }
@@ -157,11 +157,11 @@ void check_command(const int &id) {
             save_tasks(store_path, tasks);
             println("Checked.");
         } catch (const std::runtime_error &e2) {
-            std::cout << "Failed to save tasks: " << e2.what() << std::endl;
+            std::cerr << "Failed to save tasks: " << e2.what() << std::endl;
             exit(1);
         }
     } catch (const std::runtime_error &e1) {
-        std::cout << "Failed to read tasks: " << e1.what() << std::endl;
+        std::cerr << "Failed to read tasks: " << e1.what() << std::endl;
         exit(1);
     }
 }
