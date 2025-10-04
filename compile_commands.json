@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/Dev/taskerplusplus/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -IC:/Dev/taskerplusplus/src -isystem C:/Users/zero/.vcpkg-clion/vcpkg/installed/x64-windows/include -O0 -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -o CMakeFiles\\taskerplusplus.dir\\src\\main.cpp.obj -c C:\\Dev\\taskerplusplus\\src\\main.cpp",
+  "file": "C:/Dev/taskerplusplus/src/main.cpp",
+  "output": "C:/Dev/taskerplusplus/build/CMakeFiles/taskerplusplus.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Dev/taskerplusplus/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -IC:/Dev/taskerplusplus/src -isystem C:/Users/zero/.vcpkg-clion/vcpkg/installed/x64-windows/include -O0 -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -o CMakeFiles\\taskerplusplus.dir\\src\\store.cpp.obj -c C:\\Dev\\taskerplusplus\\src\\store.cpp",
+  "file": "C:/Dev/taskerplusplus/src/store.cpp",
+  "output": "C:/Dev/taskerplusplus/build/CMakeFiles/taskerplusplus.dir/src/store.cpp.obj"
+}
+]
