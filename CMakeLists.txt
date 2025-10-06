@@ -3,6 +3,7 @@ project(taskerplusplus)
 
 set(CMAKE_CXX_STANDARD 17)
 find_package(nlohmann_json CONFIG REQUIRED)
+find_package(tl-expected CONFIG REQUIRED)
 include_directories(src)
 
 add_executable(taskerplusplus
