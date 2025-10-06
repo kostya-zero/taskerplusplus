@@ -11,6 +11,7 @@ By the way, it's made for learning the C++ language, not for the actual use.
 - [x] `list` command
 - [x] `remove` command
 - [x] `check` command
+- [ ] Rewrite error handling with `tl::expected`
 - [ ] Setup GitHub Action builds
 - [ ] Better CLI visuals
 - [ ] Use a better error handling solution
