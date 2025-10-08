@@ -1,7 +1,9 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <sstream>
 #include <tl/expected.hpp>
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 #include "store.h"
 
@@ -9,10 +11,14 @@ const char *TASKER_VERSION = "0.1.0";
 
 void println(const char *str) { std::cout << str << std::endl; }
 
+void print_success(const char *str) {
+    std::cout << " \x1b[92m\xE2\x9C\x93\x1b[0m " << str << std::endl;
+}
+
 void eprintln(const char *str) { std::cerr << " Error: " << str << std::endl; }
 
 void eprintln(const std::string &str) {
-    std::cerr << " Error: " << str << std::endl;
+    std::cerr << " \x1b[91mError:\x1b[0m " << str << std::endl;
 }
 
 void print_help() {
@@ -62,7 +68,7 @@ void add_command(const std::string &desc) {
         exit(1);
     }
 
-    println("Added.");
+    print_success("Added.");
 }
 
 void list_command() {
@@ -111,7 +117,7 @@ void remove_command(const int &id) {
         eprintln(save_result.error());
         exit(1);
     }
-    println("Removed.");
+    print_success("Removed.");
 }
 
 void check_command(const int &id) {
@@ -134,10 +140,15 @@ void check_command(const int &id) {
         eprintln(save_result.error());
         exit(1);
     }
-    println("Checked.");
+    print_success("Checked.");
 }
 
 int main(const int argc, char *argv[]) {
+    // Required to properly print unicode
+#ifdef WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+
     if (argc < 2) {
         print_help();
         return 1;
@@ -148,11 +159,11 @@ int main(const int argc, char *argv[]) {
     switch (command) {
     case Command::ADD:
         if (argc < 3) {
-            println("Description is required.");
+            eprintln("Description is required.");
             return 1;
         }
         if (argc > 3) {
-            println("Too many arguments");
+            eprintln("Too many arguments");
             return 1;
         }
 
@@ -166,11 +177,11 @@ int main(const int argc, char *argv[]) {
         break;
     case Command::CHECK:
         if (argc < 3) {
-            println("ID is required.");
+            eprintln("ID is required.");
             return 1;
         }
         if (argc > 3) {
-            println("Too many arguments");
+            eprintln("Too many arguments");
             return 1;
         }
 
@@ -190,11 +201,11 @@ int main(const int argc, char *argv[]) {
         break;
     case Command::REMOVE:
         if (argc < 3) {
-            println("ID is required.");
+            eprintln("ID is required.");
             return 1;
         }
         if (argc > 3) {
-            println("Too many arguments");
+            eprintln("Too many arguments");
             return 1;
         }
 
