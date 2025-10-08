@@ -1,8 +1,8 @@
 {
-    "name": "taskerplusplus",
-    "version-string": "0.1.0",
-    "dependencies": [
-        "nlohmann-json",
-        "tl-expected"
-    ]
+  "name": "taskerplusplus",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "nlohmann-json",
+    "tl-expected"
+  ]
 }

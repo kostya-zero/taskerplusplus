@@ -6,7 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_STANDARD 17)
 find_package(nlohmann_json CONFIG REQUIRED)
-# find_package(tl-expected CONFIG REQUIRED)
+find_package(tl-expected CONFIG REQUIRED)
 include_directories(src)
 
 add_executable(taskerplusplus
@@ -16,3 +16,4 @@ add_executable(taskerplusplus
 )
 
 target_link_libraries(taskerplusplus PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(taskerplusplus PRIVATE tl::expected)
