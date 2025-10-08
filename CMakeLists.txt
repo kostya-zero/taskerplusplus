@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 4.0)
 project(taskerplusplus)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
 set(CMAKE_CXX_STANDARD 17)
 find_package(nlohmann_json CONFIG REQUIRED)
-find_package(tl-expected CONFIG REQUIRED)
+# find_package(tl-expected CONFIG REQUIRED)
 include_directories(src)
 
 add_executable(taskerplusplus

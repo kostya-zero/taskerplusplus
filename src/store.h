@@ -1,14 +1,36 @@
 #ifndef TASKERPLUSPLUS_STORE_H
 #define TASKERPLUSPLUS_STORE_H
-#include <string>
 #include <nlohmann/json_fwd.hpp>
+#include <string>
+#include <tl/expected.hpp>
 
+using result = tl::expected<tl::monostate, std::string>;
 using json = nlohmann::json;
 
 struct Task {
     int id;
     std::string desc;
     bool done;
+};
+
+class Tasks {
+  private:
+    std::vector<Task> tasks;
+
+  public:
+    Tasks();
+
+    result load_tasks(const std::string &filename);
+
+    result save_tasks(const std::string &filename);
+
+    std::vector<Task> get_tasks();
+
+    void add(const std::string &desc);
+
+    result check(const int &id);
+
+    result remove(const int &id);
 };
 
 void to_json(json &j, const Task &t);
@@ -19,9 +41,4 @@ std::string get_home_directory();
 
 std::string get_store_path();
 
-void save_tasks(const std::string &filename, const std::vector<Task> &tasks);
-
-std::vector<Task> load_tasks(const std::string &filename);
-
-
-#endif //TASKERPLUSPLUS_STORE_H
+#endif // TASKERPLUSPLUS_STORE_H

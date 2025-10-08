@@ -10,7 +10,8 @@ const char *TASKER_VERSION = "0.1.0";
 void println(const char *str) { std::cout << str << std::endl; }
 
 void eprintln(const char *str) { std::cerr << " Error: " << str << std::endl; }
-void eprintln(const std::string *str) {
+
+void eprintln(const std::string &str) {
     std::cerr << " Error: " << str << std::endl;
 }
 
@@ -46,147 +47,94 @@ Command stringToEnum(const std::string &command) {
 
 void add_command(const std::string &desc) {
     const std::string store_path = get_store_path();
-    try {
-        std::vector<Task> tasks = load_tasks(store_path);
-        int next_id = 0;
-        for (const auto &task : tasks) {
-            if (task.id > next_id) {
-                next_id = task.id;
-            }
-        }
-        Task task;
-        task.id = next_id + 1;
-        task.desc = desc;
-        task.done = false;
-
-        tasks.push_back(task);
-
-        try {
-            save_tasks(store_path, tasks);
-            println("Added.");
-        } catch (const std::runtime_error &e) {
-            std::ostringstream oss;
-            oss << "Failed to save tasks: " << e.what();
-            std::string error = oss.str();
-            eprintln(&error);
-            exit(1);
-        }
-    } catch (const std::runtime_error &e) {
-        std::ostringstream oss;
-        oss << "failed to read tasks: " << e.what();
-        std::string error = oss.str();
-        eprintln(&error);
+    Tasks tasks = Tasks();
+    auto load_result = tasks.load_tasks(store_path);
+    if (!load_result) {
+        eprintln(load_result.error());
         exit(1);
     }
+
+    tasks.add(desc);
+
+    auto save_result = tasks.save_tasks(store_path);
+    if (!save_result) {
+        eprintln(save_result.error());
+        exit(1);
+    }
+
+    println("Added.");
 }
 
 void list_command() {
     const std::string store_path = get_store_path();
-    try {
-        std::vector<Task> tasks = load_tasks(store_path);
-        if (tasks.empty()) {
-            println("No tasks at the moment.");
-            return;
-        }
-
-        // Sort tasks by id
-        std::sort(tasks.begin(), tasks.end(),
-                  [](const Task &a, const Task &b) { return a.id < b.id; });
-
-        for (const auto &task : tasks) {
-            std::cout << "[" << (task.done ? "x" : " ") << "] " << task.id
-                      << ": " << task.desc << std::endl;
-        }
-    } catch (const std::runtime_error &e) {
-        std::ostringstream oss;
-        oss << "failed to read tasks: " << e.what();
-        const std::string error = oss.str();
-        eprintln(&error);
+    Tasks store = Tasks();
+    auto load_result = store.load_tasks(store_path);
+    if (!load_result) {
+        eprintln(load_result.error());
         exit(1);
+    }
+
+    auto tasks = store.get_tasks();
+
+    if (tasks.empty()) {
+        println("No tasks at the moment.");
+        return;
+    }
+
+    // Sort tasks by id
+    std::sort(tasks.begin(), tasks.end(),
+              [](const Task &a, const Task &b) { return a.id < b.id; });
+
+    for (const auto &task : tasks) {
+        std::cout << "[" << (task.done ? "x" : " ") << "] " << task.id << ": "
+                  << task.desc << std::endl;
     }
 }
 
 void remove_command(const int &id) {
     const std::string store_path = get_store_path();
-    try {
-        std::vector<Task> tasks = load_tasks(store_path);
-        if (tasks.empty()) {
-            println("No tasks at the moment.");
-            return;
-        }
-
-        std::optional<size_t> task_index;
-        for (size_t i = 0; i < tasks.size(); ++i) {
-            if (tasks[i].id == id) {
-                task_index = i;
-            }
-        }
-        if (!task_index.has_value()) {
-            eprintln("Task not found");
-            exit(1);
-        }
-
-        tasks.erase(tasks.begin() + task_index.value());
-
-        try {
-            save_tasks(store_path, tasks);
-            println("Removed.");
-        } catch (const std::runtime_error &e) {
-            std::ostringstream oss;
-            oss << "Failed to save tasks: " << e.what();
-            std::string error = oss.str();
-            eprintln(&error);
-            exit(1);
-        }
-    } catch (const std::runtime_error &e) {
-        std::ostringstream oss;
-        oss << "failed to read tasks: " << e.what();
-        std::string error = oss.str();
-        eprintln(&error);
+    Tasks tasks = Tasks();
+    auto load_result = tasks.load_tasks(store_path);
+    if (!load_result) {
+        eprintln(load_result.error());
         exit(1);
     }
+
+    auto remove_result = tasks.remove(id);
+    if (!remove_result) {
+        eprintln(remove_result.error());
+        exit(1);
+    }
+
+    auto save_result = tasks.save_tasks(store_path);
+    if (!save_result) {
+        eprintln(save_result.error());
+        exit(1);
+    }
+    println("Removed.");
 }
 
 void check_command(const int &id) {
     const std::string store_path = get_store_path();
-    try {
-        std::vector<Task> tasks = load_tasks(store_path);
-        if (tasks.empty()) {
-            println("No tasks at the moment.");
-            return;
-        }
-
-        std::optional<size_t> task_index;
-        for (size_t i = 0; i < tasks.size(); ++i) {
-            if (tasks[i].id == id) {
-                task_index = i;
-            }
-        }
-        if (!task_index.has_value()) {
-            eprintln("Task not found");
-            exit(1);
-        }
-
-        // Reversing bool state
-        tasks[task_index.value()].done = !tasks[task_index.value()].done;
-
-        try {
-            save_tasks(store_path, tasks);
-            println("Checked.");
-        } catch (const std::runtime_error &e) {
-            std::ostringstream oss;
-            oss << "Failed to save tasks: " << e.what();
-            std::string error = oss.str();
-            eprintln(&error);
-            exit(1);
-        }
-    } catch (const std::runtime_error &e) {
-        std::ostringstream oss;
-        oss << "Failed to read tasks: " << e.what();
-        std::string error = oss.str();
-        eprintln(&error);
+    Tasks tasks = Tasks();
+    auto load_result = tasks.load_tasks(store_path);
+    if (!load_result) {
+        eprintln(load_result.error());
         exit(1);
     }
+
+    auto check_result = tasks.check(id);
+    if (!check_result) {
+        eprintln(check_result.error());
+        exit(1);
+    }
+
+    auto save_result = tasks.save_tasks(store_path);
+    if (!save_result) {
+        eprintln(save_result.error());
+        exit(1);
+    }
+    println("Checked.");
 }
 
 int main(const int argc, char *argv[]) {
