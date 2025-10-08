@@ -148,7 +148,6 @@ int main(const int argc, char *argv[]) {
 #ifdef WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
-
     if (argc < 2) {
         print_help();
         return 1;
