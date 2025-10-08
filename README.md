@@ -16,4 +16,3 @@ By the way, it's made for learning the C++ language, not for the actual use.
 - [ ] Better CLI visuals
   - [ ] Redesign tasks list
   - [ ] Use icons in the output.
-- [ ] Use a better error handling solution
